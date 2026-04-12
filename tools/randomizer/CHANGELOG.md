@@ -32,8 +32,8 @@
 - **Auto-integration** — Entity editor edits automatically included when building randomized ISO
 
 #### QoL Patches
-- **Fist pump animation disabled** — Found and patched the real animation trigger in the player state machine (0x2B0F2), not just the one-time notification
-- **Three QoL patches now**: gem first-pickup popups (5), obsidian first-pickup notification, per-pickup fist pump animation
+- **All pickup celebration animations disabled** — Patched the pickup handler branch at VA 0x413A2 (JNZ->JMP) to always skip the stop-pose-delay animation, matching the gem code path
+- **Two QoL patches now**: gem first-pickup popups (5), pickup celebration animations
 
 #### GUI Improvements
 - Warning labels on Keys, Barriers, and Connections checkboxes ("may cause unsolvable seeds")
@@ -64,5 +64,5 @@
 - Major items, keys, gems, barriers randomization
 - Seed-based reproducibility
 - GUI with category checkboxes
-- QoL patches: gem popups, obsidian animation
+- QoL patches: gem popups, pickup animations
 - CLI and GUI interfaces

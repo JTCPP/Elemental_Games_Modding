@@ -15,9 +15,9 @@ QOL_PATCHES = [
         "included_in_randomizer": True,
     },
     {
-        "key": "disable_obsidian_anim",
-        "label": "Disable obsidian pickup animation",
-        "description": "Skips the fist pump animation and voice line when collecting obsidian gems.",
+        "key": "disable_pickup_anims",
+        "label": "Disable pickup celebration animations",
+        "description": "Skips the stop-pose-delay celebration animation for all collectible pickups.",
         "default": True,
         "included_in_randomizer": True,
     },

@@ -9,7 +9,7 @@ A full-game randomizer for **Azurik: Rise of Perathia** (Xbox, 2001). Shuffles c
 - **Gems**: Diamond, emerald, sapphire, ruby distribution randomized per-level (custom weights supported)
 - **Barriers**: Element vulnerability randomized
 - **Custom Item Pool**: Choose exactly how many of each item type to include
-- **QoL Patches**: Disables gem first-pickup popups and obsidian fist-pump animation
+- **QoL Patches**: Disables gem first-pickup popups and all pickup celebration animations
 - **Seed-based**: Reproducible results — share a seed to share a run
 - **GUI and CLI**: Graphical interface or command-line for advanced users
 

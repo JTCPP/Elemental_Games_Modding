@@ -912,13 +912,9 @@ BARRIER_FOURCCS_HARD = [b"watr", b"fire", b"smsh", b"wind", b"stem", b"acid", b"
 # XBE QoL patch offsets
 # Gem popup string file offsets (null first byte to disable)
 GEM_POPUP_OFFSETS = [0x197858, 0x19783C, 0x197820, 0x197800, 0x1977D8]
-# Pickup celebration animation patch (confirmed via runtime debugging).
-#
-# The pickup handler at VA 0x41390 (resolved from vtable[0xB8]) checks
-# bit 0x10000000 in [this+0x168] to decide whether to play the celebration.
-# Gems have this bit SET (no animation); obsidians have it CLEAR (animation).
-# Replace the conditional JNZ with an unconditional JMP so all pickups
-# take the "gem path" -- skip animation, go straight to despawn/cooldown.
+# Disable all pickup celebration animations (file 0x0313A2, VA 0x0413A2).
+# Forces the pickup handler to always skip the stop-pose-delay animation
+# by replacing a conditional JNZ with an unconditional JMP.
 PICKUP_ANIM_OFFSET = 0x0313A2
 PICKUP_ANIM_ORIGINAL = bytes([0x0F, 0x85, 0xCB, 0x00, 0x00, 0x00])  # JNZ +0xCB
 PICKUP_ANIM_PATCH = bytes([0xE9, 0xCC, 0x00, 0x00, 0x00, 0x90])     # JMP +0xCC; NOP
@@ -1957,7 +1953,7 @@ def cmd_randomize_full(args):
                     xbe_data[off] = 0x00
             print(f"  Disabled 5 gem first-pickup popups")
 
-            # Disable pickup celebration animation (JNZ -> JMP in pickup handler)
+            # Disable all pickup celebration animations
             if PICKUP_ANIM_OFFSET + 6 <= len(xbe_data):
                 current = bytes(xbe_data[PICKUP_ANIM_OFFSET:PICKUP_ANIM_OFFSET + 6])
                 if current == PICKUP_ANIM_ORIGINAL:
@@ -2183,7 +2179,7 @@ def main():
             "  3. Gems: diamond/emerald/sapphire/ruby shuffled per-level\n"
             "  4. Barriers: element vulnerability randomized per-level\n"
             "\n"
-            "Also applies QoL patches: disable gem popups + obsidian animation.\n"
+            "Also applies QoL patches: disable gem popups + pickup animations.\n"
             "Use --no-major, --no-keys, --no-gems, --no-barriers, --no-qol to skip."
         ))
     p_full.add_argument("--iso", required=True, help="Original game .iso")
@@ -2203,7 +2199,7 @@ def main():
     p_full.add_argument("--no-connections", action="store_true",
                          help="Skip level connection randomization")
     p_full.add_argument("--no-qol", action="store_true",
-                         help="Skip QoL patches (gem popups, obsidian animation)")
+                         help="Skip QoL patches (gem popups, pickup animations)")
     p_full.add_argument("--obsidian-cost", type=int, metavar="N",
                          help="Obsidian cost per temple lock (default: 10 = locks at 10,20,...100)")
     p_full.add_argument("--item-pool",
