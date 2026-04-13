@@ -17,7 +17,7 @@ QOL_PATCHES = [
     {
         "key": "disable_pickup_anims",
         "label": "Disable pickup celebration animations",
-        "description": "Skips the stop-pose-delay celebration animation for all collectible pickups.",
+        "description": "Skips the celebration animation for all collectible pickups (obsidians, keys, powers, disc fragments) without affecting save persistence.",
         "default": True,
         "included_in_randomizer": True,
     },

@@ -912,12 +912,21 @@ BARRIER_FOURCCS_HARD = [b"watr", b"fire", b"smsh", b"wind", b"stem", b"acid", b"
 # XBE QoL patch offsets
 # Gem popup string file offsets (null first byte to disable)
 GEM_POPUP_OFFSETS = [0x197858, 0x19783C, 0x197820, 0x197800, 0x1977D8]
-# Disable all pickup celebration animations (file 0x0313A2, VA 0x0413A2).
-# Forces the pickup handler to always skip the stop-pose-delay animation
-# by replacing a conditional JNZ with an unconditional JMP.
-PICKUP_ANIM_OFFSET = 0x0313A2
-PICKUP_ANIM_ORIGINAL = bytes([0x0F, 0x85, 0xCB, 0x00, 0x00, 0x00])  # JNZ +0xCB
-PICKUP_ANIM_PATCH = bytes([0xE9, 0xCC, 0x00, 0x00, 0x00, 0x90])     # JMP +0xCC; NOP
+# Disable all pickup celebration animations (file 0x0313EE, VA 0x0413EE).
+# The pickup handler FUN_00041390 enters a block for non-gem pickups that:
+#   (A) FUN_00061360  — sets "collected" flag, adds to save list
+#   (B) virtual call  — FUN_0006FC90, decrements pickup counter (persistence)
+#   (C) linked-list cleanup — zeroes [this+0x1EC/0x1F0]
+#   (D) counter update — writes [[[this+0x154]+0xD8]+4]
+# Steps C and D keep the pickup entity's animation data live, which its
+# per-frame update (FUN_00037950 → FUN_00037AB0) reads to play anim 0x52
+# (the celebration).  We replace the first instruction of step C with a JMP
+# to the epilog (0x4146F), skipping C+D.  Steps A+B still run for persistence.
+# Both null-check JZ branches (0x413CA, 0x413D1) already target 0x413EE,
+# so they naturally hit our JMP — no other code changes needed.
+PICKUP_ANIM_OFFSET = 0x0313EE
+PICKUP_ANIM_ORIGINAL = bytes([0x8B, 0x8A, 0xEC, 0x01, 0x00])  # MOV ECX,[EDX+0x1EC] (5 of 6 bytes)
+PICKUP_ANIM_PATCH = bytes([0xE9, 0x7C, 0x00, 0x00, 0x00])     # JMP 0x4146F (epilog)
 
 # Player character swap: replace "garret4" with another character model
 # At file offset 0x1976C8, "garret4\0d:\" = 12 bytes, can fit any name up to 11 chars
@@ -1953,11 +1962,12 @@ def cmd_randomize_full(args):
                     xbe_data[off] = 0x00
             print(f"  Disabled 5 gem first-pickup popups")
 
-            # Disable all pickup celebration animations
-            if PICKUP_ANIM_OFFSET + 6 <= len(xbe_data):
-                current = bytes(xbe_data[PICKUP_ANIM_OFFSET:PICKUP_ANIM_OFFSET + 6])
+            # Disable all pickup celebration animations (skip linked-list cleanup + counter update)
+            patch_len = len(PICKUP_ANIM_ORIGINAL)
+            if PICKUP_ANIM_OFFSET + patch_len <= len(xbe_data):
+                current = bytes(xbe_data[PICKUP_ANIM_OFFSET:PICKUP_ANIM_OFFSET + patch_len])
                 if current == PICKUP_ANIM_ORIGINAL:
-                    xbe_data[PICKUP_ANIM_OFFSET:PICKUP_ANIM_OFFSET + 6] = PICKUP_ANIM_PATCH
+                    xbe_data[PICKUP_ANIM_OFFSET:PICKUP_ANIM_OFFSET + patch_len] = PICKUP_ANIM_PATCH
                     print(f"  Disabled pickup celebration animation")
                 else:
                     print(f"  WARNING: XBE bytes at 0x{PICKUP_ANIM_OFFSET:X} don't match expected "

@@ -32,7 +32,7 @@
 - **Auto-integration** — Entity editor edits automatically included when building randomized ISO
 
 #### QoL Patches
-- **All pickup celebration animations disabled** — Patched the pickup handler branch at VA 0x413A2 (JNZ->JMP) to always skip the stop-pose-delay animation, matching the gem code path
+- **All pickup celebration animations disabled** — JMP at VA 0x413EE skips the linked-list cleanup and counter update that keep the celebration animation data live, while FUN_00061360 (collected flag) and FUN_0006FC90 (pickup counter) still run for save persistence
 - **Two QoL patches now**: gem first-pickup popups (5), pickup celebration animations
 
 #### GUI Improvements
