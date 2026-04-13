@@ -912,17 +912,21 @@ BARRIER_FOURCCS_HARD = [b"watr", b"fire", b"smsh", b"wind", b"stem", b"acid", b"
 # XBE QoL patch offsets
 # Gem popup string file offsets (null first byte to disable)
 GEM_POPUP_OFFSETS = [0x197858, 0x19783C, 0x197820, 0x197800, 0x1977D8]
-# Obsidian fist pump animation: patch 6 bytes at file offset 0x0489C3
-OBSIDIAN_ANIM_OFFSET = 0x0489C3
-OBSIDIAN_ANIM_ORIGINAL = bytes([0x8B, 0x86, 0xD8, 0x01, 0x00, 0x00])
-OBSIDIAN_ANIM_PATCH = bytes([0xEB, 0x1C, 0x90, 0x90, 0x90, 0x90])
-
-# Per-pickup fist pump animation: player state machine at 0x2B0F2
-# State 0x1E checks absorbed entity type (+0x148); if non-zero, plays animation 0x52
-# Patch the conditional JE to unconditional JMP to always skip the animation
-FIST_PUMP_OFFSET = 0x02B0F2
-FIST_PUMP_ORIGINAL = bytes([0x74, 0x0C])  # JE +12 (skip if zero)
-FIST_PUMP_PATCH = bytes([0xEB, 0x0C])     # JMP +12 (always skip)
+# Disable all pickup celebration animations (file 0x0313EE, VA 0x0413EE).
+# The pickup handler FUN_00041390 enters a block for non-gem pickups that:
+#   (A) FUN_00061360  — sets "collected" flag, adds to save list
+#   (B) virtual call  — FUN_0006FC90, decrements pickup counter (persistence)
+#   (C) linked-list cleanup — zeroes [this+0x1EC/0x1F0]
+#   (D) counter update — writes [[[this+0x154]+0xD8]+4]
+# Steps C and D keep the pickup entity's animation data live, which its
+# per-frame update (FUN_00037950 → FUN_00037AB0) reads to play anim 0x52
+# (the celebration).  We replace the first instruction of step C with a JMP
+# to the epilog (0x4146F), skipping C+D.  Steps A+B still run for persistence.
+# Both null-check JZ branches (0x413CA, 0x413D1) already target 0x413EE,
+# so they naturally hit our JMP — no other code changes needed.
+PICKUP_ANIM_OFFSET = 0x0313EE
+PICKUP_ANIM_ORIGINAL = bytes([0x8B, 0x8A, 0xEC, 0x01, 0x00])  # MOV ECX,[EDX+0x1EC] (5 of 6 bytes)
+PICKUP_ANIM_PATCH = bytes([0xE9, 0x7C, 0x00, 0x00, 0x00])     # JMP 0x4146F (epilog)
 
 # Player character swap: replace "garret4" with another character model
 # At file offset 0x1976C8, "garret4\0d:\" = 12 bytes, can fit any name up to 11 chars
@@ -1958,25 +1962,16 @@ def cmd_randomize_full(args):
                     xbe_data[off] = 0x00
             print(f"  Disabled 5 gem first-pickup popups")
 
-            # Disable obsidian fist pump animation
-            if OBSIDIAN_ANIM_OFFSET + 6 <= len(xbe_data):
-                current = bytes(xbe_data[OBSIDIAN_ANIM_OFFSET:OBSIDIAN_ANIM_OFFSET + 6])
-                if current == OBSIDIAN_ANIM_ORIGINAL:
-                    xbe_data[OBSIDIAN_ANIM_OFFSET:OBSIDIAN_ANIM_OFFSET + 6] = OBSIDIAN_ANIM_PATCH
-                    print(f"  Disabled obsidian first-pickup notification")
+            # Disable all pickup celebration animations (skip linked-list cleanup + counter update)
+            patch_len = len(PICKUP_ANIM_ORIGINAL)
+            if PICKUP_ANIM_OFFSET + patch_len <= len(xbe_data):
+                current = bytes(xbe_data[PICKUP_ANIM_OFFSET:PICKUP_ANIM_OFFSET + patch_len])
+                if current == PICKUP_ANIM_ORIGINAL:
+                    xbe_data[PICKUP_ANIM_OFFSET:PICKUP_ANIM_OFFSET + patch_len] = PICKUP_ANIM_PATCH
+                    print(f"  Disabled pickup celebration animation")
                 else:
-                    print(f"  WARNING: XBE bytes at 0x{OBSIDIAN_ANIM_OFFSET:X} don't match expected "
-                          f"(got {current.hex()}, expected {OBSIDIAN_ANIM_ORIGINAL.hex()})")
-
-            # Disable per-pickup fist pump animation
-            if FIST_PUMP_OFFSET + 2 <= len(xbe_data):
-                current = bytes(xbe_data[FIST_PUMP_OFFSET:FIST_PUMP_OFFSET + 2])
-                if current == FIST_PUMP_ORIGINAL:
-                    xbe_data[FIST_PUMP_OFFSET:FIST_PUMP_OFFSET + 2] = FIST_PUMP_PATCH
-                    print(f"  Disabled per-pickup fist pump animation")
-                else:
-                    print(f"  WARNING: XBE bytes at 0x{FIST_PUMP_OFFSET:X} don't match expected "
-                          f"(got {current.hex()}, expected {FIST_PUMP_ORIGINAL.hex()})")
+                    print(f"  WARNING: XBE bytes at 0x{PICKUP_ANIM_OFFSET:X} don't match expected "
+                          f"(got {current.hex()}, expected {PICKUP_ANIM_ORIGINAL.hex()})")
 
             # Player character swap (experimental)
             player_char = getattr(args, 'player_character', None)
@@ -2194,7 +2189,7 @@ def main():
             "  3. Gems: diamond/emerald/sapphire/ruby shuffled per-level\n"
             "  4. Barriers: element vulnerability randomized per-level\n"
             "\n"
-            "Also applies QoL patches: disable gem popups + obsidian animation.\n"
+            "Also applies QoL patches: disable gem popups + pickup animations.\n"
             "Use --no-major, --no-keys, --no-gems, --no-barriers, --no-qol to skip."
         ))
     p_full.add_argument("--iso", required=True, help="Original game .iso")
@@ -2214,7 +2209,7 @@ def main():
     p_full.add_argument("--no-connections", action="store_true",
                          help="Skip level connection randomization")
     p_full.add_argument("--no-qol", action="store_true",
-                         help="Skip QoL patches (gem popups, obsidian animation)")
+                         help="Skip QoL patches (gem popups, pickup animations)")
     p_full.add_argument("--obsidian-cost", type=int, metavar="N",
                          help="Obsidian cost per temple lock (default: 10 = locks at 10,20,...100)")
     p_full.add_argument("--item-pool",

@@ -132,7 +132,7 @@ class RandomizerTab(ttk.Frame):
             ("do_gems", "Gems (diamond/emerald/sapphire/ruby per-level)", True),
             ("do_barriers", "Barriers (element vulnerability)", True),
             ("do_connections", "Level Connections (randomize exits between levels)", False),
-            ("do_qol", "QoL Patches (disable popups, obsidian animation)", True),
+            ("do_qol", "QoL Patches (disable popups, pickup animations)", True),
         ]
         for key, label, default in categories:
             var = tk.BooleanVar(value=default)
