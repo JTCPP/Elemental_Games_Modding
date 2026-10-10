@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111820">
+  <title>Azurik · Level Studio 2.1.1</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/assets/studio.ico">
+  <script type="importmap">{"imports":{"three":"/vendor/three.module.js"}}</script>
+</head>
+<body>
+  <svg aria-hidden="true" class="svg-library" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3h2Zm2 0v7h10V3M7 21v-7h10v7"/></symbol>
+      <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 3v12m-5-7 5-5 5 5M4 14v6h16v-6"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="i-cube" viewBox="0 0 24 24"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Zm0 10v10M3 7l9 5 9-5M7.5 4.5l9 5"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 1-6 6l-6-6a6 6 0 1 1 12 0ZM12 15v7"/><circle cx="12" cy="7" r="2"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-hide" viewBox="0 0 24 24"><path d="m3 3 18 18M9 5.5A10 10 0 0 1 12 5c6 0 10 7 10 7a19 19 0 0 1-4 4M6 6a22 22 0 0 0-4 6s4 7 10 7a13 13 0 0 0 5-1M10 10a3 3 0 0 0 4 4"/></symbol>
+      <symbol id="i-move" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20m-14-6 4-4 4 4m-8 12 4 4 4-4M6 8l-4 4 4 4m12-8 4 4-4 4"/></symbol>
+      <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 1 8M3 4v6h6"/></symbol>
+      <symbol id="i-scale" viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-8 8M3 14h7v7H3z"/></symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24"><path d="m8 4-5 5 5 5M3 9h10a7 7 0 0 1 0 14"/></symbol>
+      <symbol id="i-redo" viewBox="0 0 24 24"><path d="m16 4 5 5-5 5M21 9H11a7 7 0 0 0 0 14"/></symbol>
+      <symbol id="i-frame" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5"/><path d="M8 8h8v8H8z"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18"/></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 17l6-7 4 4 3-3 5 6"/><circle cx="16" cy="7" r="1"/></symbol>
+      <symbol id="i-wire" viewBox="0 0 24 24"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5ZM3 7l9 15 9-15M12 2v20M3 17h18"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4Z"/><path d="m8 12 3 3 5-6"/></symbol>
+      <symbol id="i-fly" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7Zm-11 11L22 2"/></symbol>
+      <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3h.01"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 20V4h7l3 3h8v13H3Z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 7h5l2-3h4l2 3h5v14H3Z"/><circle cx="12" cy="13" r="4"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6M10 15v6"/></symbol>
+      <symbol id="i-isolate" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5"/><circle cx="12" cy="12" r="4"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 3 14 9-14 9Z"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 3v18M17 3v18"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><path d="M6 10h12v11H6zM8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+      <symbol id="i-unlock" viewBox="0 0 24 24"><path d="M6 10h12v11H6zM8 10V7a4 4 0 0 1 7.5-2M12 14v3"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark"><span></span><span></span><span></span></div><div><strong>AZURIK</strong><span>LEVEL STUDIO</span></div><span class="version">2.1.1 · LOCAL</span></div>
+    <div class="project-title"><span class="project-dot"></span><span>Rise of Perathia</span><span class="project-separator">/</span><strong id="headerLevel">Chargement du projet…</strong><span id="dirtyDot" class="dirty-dot" hidden></span></div>
+    <div class="header-actions"><label class="language-control"><span class="sr-only">Langue de l’interface</span><select id="languageSelect" class="compact-select" aria-label="Langue de l’interface"><option value="fr" lang="fr" translate="no">Français</option><option value="en" lang="en" translate="no">English</option></select></label><button id="importIsoBtn" class="button secondary import-button" title="Importer un fichier ISO Xbox"><svg><use href="#i-folder"/></svg><span>Importer un ISO</span></button><input id="isoFileInput" type="file" accept=".iso,.xiso" hidden aria-label="Importer un fichier ISO Xbox"><button id="helpBtn" class="icon-button" title="Commandes et raccourcis" aria-label="Commandes et raccourcis"><svg><use href="#i-help"/></svg></button><button id="saveBtn" class="button secondary" disabled><svg><use href="#i-save"/></svg><span>Enregistrer</span></button><button id="exportBtn" class="button primary" disabled><svg><use href="#i-export"/></svg><span>Exporter le mod</span></button></div>
+  </header>
+
+  <nav class="editor-menubar" aria-label="Menus de l’éditeur">
+    <details class="editor-menu"><summary>Fichier</summary><div class="menu-popup">
+      <button data-action="importIso"><span>Importer un ISO</span></button>
+      <button data-action="save"><span>Enregistrer</span><kbd>Ctrl S</kbd></button>
+      <button data-action="export"><span>Exporter le mod</span><kbd>Ctrl Maj E</kbd></button>
+    </div></details>
+    <details class="editor-menu"><summary>Niveaux</summary><div class="menu-popup">
+      <button data-action="createLevel"><span>Créer un niveau depuis un modèle</span></button>
+      <button data-action="deleteLevel"><span>Supprimer un niveau du mod</span></button>
+      <button data-action="manageLevels"><span>Gérer les niveaux</span></button>
+      <button data-action="buildIso"><span>Construire une ISO du mod</span></button>
+    </div></details>
+    <details class="editor-menu"><summary>Édition</summary><div class="menu-popup">
+      <button data-action="undo"><span>Annuler</span><kbd>Ctrl Z</kbd></button>
+      <button data-action="redo"><span>Rétablir</span><kbd>Ctrl Maj Z</kbd></button>
+      <button data-action="duplicate"><span>Dupliquer la sélection</span><kbd>Ctrl D</kbd></button>
+      <button data-action="delete"><span>Supprimer l’ajout sélectionné</span><kbd>Suppr</kbd></button>
+      <button data-action="resetLevel" class="menu-danger"><span>Restaurer le niveau d’origine</span></button>
+    </div></details>
+    <details class="editor-menu"><summary>Importation</summary><div class="menu-popup">
+      <button data-action="importModel"><span>Importer un modèle</span></button>
+      <button data-action="replaceModel"><span>Remplacer le modèle sélectionné</span></button>
+      <button data-action="importTexture"><span>Importer une texture PNG</span></button>
+      <button data-action="replaceTexture"><span>Remplacer une texture du niveau</span></button>
+    </div></details>
+    <details class="editor-menu"><summary>Vue</summary><div class="menu-popup">
+      <button data-action="freeCamera"><span>Caméra libre · déplacement et regard</span><kbd>Tab</kbd></button>
+      <button data-action="orbitCamera"><span>Caméra orbitale</span></button>
+      <button data-action="frame"><span>Cadrer la sélection</span><kbd>F</kbd></button>
+      <button data-action="frameAll"><span>Cadrer le niveau</span><kbd>Home</kbd></button>
+      <button data-action="viewSettings"><span>Réglages de visualisation</span></button>
+    </div></details>
+    <button data-action="help" class="menu-help">Aide et raccourcis</button>
+    <span id="navigationMode" class="navigation-mode">Caméra libre</span>
+    <span class="menu-version">2.1.1</span>
+  </nav>
+
+  <div class="workspace">
+    <aside class="panel hierarchy-panel">
+      <div class="panel-heading"><span class="eyebrow">EXPLORATEUR</span><span class="subtle-number" id="levelCount">—</span></div>
+      <div id="catalogSections" class="catalog-sections" role="group" aria-label="Type de scène">
+        <button type="button" data-catalog-section="levels" class="active" aria-pressed="true" aria-controls="levelSelect" disabled><span>Niveaux</span><span class="catalog-count" data-i18n-ignore>0</span></button>
+        <button type="button" data-catalog-section="cinematics" aria-pressed="false" aria-controls="levelSelect" disabled><span>Cinématiques</span><span class="catalog-count" data-i18n-ignore>0</span></button>
+      </div>
+      <label class="field-label" id="levelSelectLabel" for="levelSelect">Niveau actif</label>
+      <div class="select-wrap"><svg><use href="#i-folder"/></svg><select id="levelSelect" disabled><option>Lecture du dump…</option></select></div>
+      <div class="level-description"><span class="live-dot"></span><span id="levelGroup">Données originales du jeu</span></div>
+      <div class="panel-divider"></div>
+      <div class="section-heading"><h2>Scène</h2><span class="badge" id="sceneCount">0</span></div>
+      <div class="search-field"><svg><use href="#i-search"/></svg><input id="sceneSearch" placeholder="Rechercher dans la scène" aria-label="Rechercher dans la scène"><kbd>⌕</kbd></div>
+      <div class="hierarchy-filters"><button class="filter active" data-filter="all">Tout</button><button class="filter" data-filter="mesh">Géométrie</button><button class="filter" data-filter="entity">Entités</button></div>
+      <select id="nodeFilter" class="compact-select group-filter" aria-label="Filtrer par groupe du niveau"><option value="">Tous les groupes du niveau</option></select>
+      <div class="visibility-actions"><button id="isolateBtn" class="text-button" disabled><svg><use href="#i-isolate"/></svg>Isoler</button><button id="restoreVisibilityBtn" class="text-button"><svg><use href="#i-eye"/></svg>Tout afficher</button></div>
+      <div class="scene-lock-actions"><button id="lockAllBtn" class="text-button" title="Verrouiller tous les éléments du niveau" disabled><svg><use href="#i-lock"/></svg><span>Tout verrouiller</span></button><button id="unlockAllBtn" class="text-button" title="Déverrouiller tous les éléments du niveau" disabled><svg><use href="#i-unlock"/></svg><span>Tout déverrouiller</span></button></div>
+      <div id="hierarchy" class="hierarchy-list"><div class="empty-small">Le contenu du niveau apparaîtra ici.</div></div>
+      <div class="source-block"><div><svg><use href="#i-shield"/></svg><span>Dump source protégé</span></div><p id="sourcePath" title="">Les changements sont enregistrés dans le projet.</p></div>
+    </aside>
+
+    <main class="viewport-area">
+      <div class="viewport-toolbar">
+        <div class="tool-group"><button id="moveTool" class="tool-button active" title="Déplacer · W (caméra orbitale)" aria-label="Déplacer"><svg><use href="#i-move"/></svg></button><button id="rotateTool" class="tool-button" title="Rotation locale · E" aria-label="Rotation locale"><svg><use href="#i-rotate"/></svg></button><button id="scaleTool" class="tool-button" title="Échelle locale · R" aria-label="Échelle locale"><svg><use href="#i-scale"/></svg></button><span class="toolbar-separator"></span><button id="undoBtn" class="tool-button" title="Annuler · Ctrl Z" aria-label="Annuler" disabled><svg><use href="#i-undo"/></svg></button><button id="redoBtn" class="tool-button" title="Rétablir · Ctrl Maj Z" aria-label="Rétablir" disabled><svg><use href="#i-redo"/></svg></button></div>
+        <div class="toolbar-mode"><span class="mode-dot"></span><span id="toolSpace">Monde</span></div>
+        <div class="tool-group"><button id="frameBtn" class="tool-button" title="Cadrer la sélection · F / tout le niveau · Home" aria-label="Cadrer"><svg><use href="#i-frame"/></svg></button><button id="flyBtn" class="tool-button active" title="Caméra libre / orbitale · Tab" aria-label="Caméra libre" aria-pressed="true"><svg><use href="#i-fly"/></svg></button><span class="toolbar-separator"></span><button id="gridBtn" class="tool-button active" title="Grille" aria-label="Grille" aria-pressed="true"><svg><use href="#i-grid"/></svg></button><button id="textureBtn" class="tool-button active" title="Textures" aria-label="Textures" aria-pressed="true"><svg><use href="#i-image"/></svg></button><button id="wireBtn" class="tool-button" title="Fil de fer" aria-label="Fil de fer" aria-pressed="false"><svg><use href="#i-wire"/></svg></button><button id="collisionBtn" class="tool-button" title="Collisions" aria-label="Collisions" aria-pressed="false"><svg><use href="#i-shield"/></svg></button><button id="helpersBtn" class="tool-button active" title="Repères d’entités" aria-label="Repères d’entités" aria-pressed="true"><svg><use href="#i-pin"/></svg></button></div>
+      </div>
+      <div class="view-controls"><div class="view-presets"><select id="cameraPreset" class="compact-select" aria-label="Point de vue"><option value="perspective">Perspective</option><option value="start">Depuis le départ</option><option value="top">Dessus · Z</option><option value="front">Face · Y</option><option value="side">Côté · X</option></select><select id="zoomSelect" class="compact-select" aria-label="Zoom du viewport"><option value="0.5">50 %</option><option value="0.75">75 %</option><option value="1" selected>100 %</option><option value="1.5">150 %</option><option value="2">200 %</option></select></div><div class="tool-group"><button id="modelsBtn" class="view-toggle active" aria-pressed="true" title="Modèles d’entités en pose de liaison">Modèles</button><button id="animationBtn" class="tool-button active" title="Animer les textures · cadence d’aperçu" aria-label="Lire les animations de textures" aria-pressed="true"><svg><use href="#i-pause"/></svg></button><label class="fps-control"><input id="animationFps" type="number" value="12" min="1" max="60" aria-label="Cadence d’aperçu des textures"> ips</label><button id="captureBtn" class="tool-button" title="Capturer la vue en PNG" aria-label="Capturer en PNG"><svg><use href="#i-camera"/></svg></button><button id="viewSettingsBtn" class="tool-button" title="Réglages de visualisation" aria-label="Réglages de visualisation"><svg><use href="#i-settings"/></svg></button></div></div>
+      <div class="environment-controls"><select id="detailSelect" class="compact-select" aria-label="Détail du décor"><option value="close">Décor · détail maximal</option><option value="source">Décor · état de chargement</option></select><select id="skySelect" class="compact-select" aria-label="Ciel du niveau"><option value="off">Lecture du ciel…</option></select><label class="fly-speed-control"><span>Vitesse</span><select id="flySpeedSelect" class="compact-select" aria-label="Vitesse de déplacement"><option value="0.2">Lent · précision</option><option value="1" selected>Normal</option><option value="5">Rapide · exploration</option></select></label><span id="sceneCoverage" class="scene-coverage"></span></div>
+      <div id="viewport" class="viewport" tabindex="0" aria-label="Vue 3D du niveau">
+        <div class="viewport-caption"><span class="viewport-label" id="viewportLevel">AZURIK / NIVEAU</span><span class="render-badge"><span></span>Données du jeu</span><span id="cameraPosition" class="camera-position" aria-label="Position de la caméra" hidden></span></div>
+        <div id="sceneOverlay" class="scene-overlay"><div class="loading-orb"></div><h2 id="overlayTitle">Ouverture du projet</h2><p id="overlayText">Lecture du catalogue des niveaux…</p><button id="retryBtn" class="button secondary" hidden>Réessayer</button></div>
+        <div class="compass" title="Coordonnées originales : Z vers le haut"><div class="compass-line z"></div><div class="compass-line x"></div><div class="compass-line y"></div><span class="axis-z">Z</span><span class="axis-x">X</span><span class="axis-y">Y</span></div>
+        <div class="viewport-bottom"><div id="cameraHint" class="camera-hint"><span>Souris</span> orbiter <span>Molette</span> zoomer <kbd>F</kbd> cadrer</div><div class="render-stats"><span id="fps">— FPS</span><span id="triangles">— triangles</span></div></div>
+        <div id="selectionLabel" class="selection-label" hidden><svg><use href="#i-cube"/></svg><span></span></div>
+      </div>
+    </main>
+
+    <aside class="panel inspector-panel">
+      <div class="panel-heading"><span class="eyebrow">INSPECTEUR</span><span class="inspector-shortcut">PROPRIÉTÉS</span></div>
+      <div id="inspectorEmpty" class="inspector-empty"><div class="inspector-illustration"><svg><use href="#i-cube"/></svg><span></span></div><h2>Explorez le niveau</h2><p>Sélectionnez un élément pour inspecter sa source et modifier son placement, sa rotation ou son échelle.</p><button id="frameAllBtn" class="button secondary full"><svg><use href="#i-frame"/></svg>Cadrer le niveau</button><div class="data-summary" id="dataSummary"></div></div>
+      <div id="inspectorContent" hidden>
+        <div class="selected-title"><div class="selected-icon"><svg id="selectedIcon"><use href="#i-cube"/></svg></div><div><span id="selectedType" class="eyebrow">GÉOMÉTRIE</span><h2 id="selectedName"></h2></div></div>
+        <div class="object-tags"><span id="selectedTag" class="tag"></span><span id="selectedId" class="tag muted"></span></div>
+        <button id="lockBtn" class="button secondary full selection-lock" title="Empêcher les déplacements accidentels" aria-pressed="false" disabled><svg><use href="#i-lock"/></svg><span>Verrouiller</span></button>
+        <div class="panel-divider"></div>
+        <div class="section-heading"><h2>Transformation</h2><span id="inspectorSpace" class="world-label">MONDE</span></div>
+        <label class="field-label">Position</label>
+        <div class="xyz-fields"><label><span class="axis-label x">X</span><input id="posX" type="number" step="0.1" aria-label="Position X"></label><label><span class="axis-label y">Y</span><input id="posY" type="number" step="0.1" aria-label="Position Y"></label><label><span class="axis-label z">Z</span><input id="posZ" type="number" step="0.1" aria-label="Position Z"></label></div>
+        <label class="field-label">Rotation locale <span class="field-unit">degrés</span></label>
+        <div class="xyz-fields"><label><span class="axis-label x">X</span><input id="rotX" type="number" step="1" aria-label="Rotation locale X en degrés"></label><label><span class="axis-label y">Y</span><input id="rotY" type="number" step="1" aria-label="Rotation locale Y en degrés"></label><label><span class="axis-label z">Z</span><input id="rotZ" type="number" step="1" aria-label="Rotation locale Z en degrés"></label></div>
+        <label class="field-label">Échelle locale</label>
+        <div class="xyz-fields"><label><span class="axis-label x">X</span><input id="scaleX" type="number" step="0.05" aria-label="Échelle locale X"></label><label><span class="axis-label y">Y</span><input id="scaleY" type="number" step="0.05" aria-label="Échelle locale Y"></label><label><span class="axis-label z">Z</span><input id="scaleZ" type="number" step="0.05" aria-label="Échelle locale Z"></label></div>
+        <button id="resetPositionBtn" class="text-button"><svg><use href="#i-undo"/></svg>Restaurer la position d’origine</button>
+        <button id="resetTransformBtn" class="text-button"><svg><use href="#i-undo"/></svg>Restaurer rotation et échelle</button>
+        <div id="gizmoNotice" class="gizmo-notice" hidden></div>
+        <div id="selectionWarning" class="notice amber"></div>
+        <div class="panel-divider"></div>
+        <div class="section-heading"><h2>Données source</h2><svg class="heading-icon"><use href="#i-info"/></svg></div>
+        <dl id="sourceDetails" class="source-details"></dl>
+      </div>
+      <div class="inspector-footer"><div class="section-heading"><h2>Prise en charge du niveau</h2><span class="status-mini">LECTURE RÉELLE</span></div><div id="capabilities" class="capabilities"><div><span class="capability-dot"></span>Lecture en cours</div></div><div id="warnings" class="warnings"></div></div>
+    </aside>
+
+    <section class="assets-panel">
+      <div class="assets-header"><div class="asset-tabs"><button class="asset-tab active" data-tab="textures"><svg><use href="#i-image"/></svg>Textures<span id="textureCount">0</span></button><button class="asset-tab" data-tab="models"><svg><use href="#i-cube"/></svg>Modèles<span id="modelCount">0</span></button><button class="asset-tab" data-tab="materials"><svg><use href="#i-wire"/></svg>Matières<span id="materialCount">0</span></button><button class="asset-tab" data-tab="references"><svg><use href="#i-folder"/></svg>Références<span id="referenceCount">0</span></button></div><div class="assets-actions"><input id="assetSearch" class="asset-search" placeholder="Filtrer les assets…" aria-label="Rechercher dans les assets"><span id="textureFormat" class="asset-format"></span><button id="assetsCollapse" class="icon-button" title="Réduire le navigateur d’assets" aria-label="Réduire les assets"><svg><use href="#i-chevron"/></svg></button></div></div>
+      <div class="library-toolbar"><select id="assetScope" class="compact-select" aria-label="Portée de la bibliothèque"><option value="level">Niveau actif</option><option value="library">Bibliothèque du jeu</option></select><select id="archiveSelect" class="compact-select" aria-label="Archive de la bibliothèque" hidden><option>Lecture des archives…</option></select><span id="libraryStatus" class="library-status">Assets du niveau actif</span><button id="libraryRetry" class="text-button" hidden><svg><use href="#i-redo"/></svg>Réessayer</button><span class="library-readonly"><svg><use href="#i-shield"/></svg>Lecture seule</span></div>
+      <div id="assetContent" class="assets-content"><div class="assets-empty"><svg><use href="#i-image"/></svg><div><strong>Assets du niveau</strong><p>Les textures décodées apparaîtront ici.</p></div></div></div>
+      <div id="assetPager" class="asset-pager" hidden><span id="assetRange"></span><div><button id="assetPrev" class="pager-button" aria-label="Page précédente"><svg><use href="#i-chevron"/></svg></button><span id="assetPage"></span><button id="assetNext" class="pager-button" aria-label="Page suivante"><svg><use href="#i-chevron"/></svg></button></div></div>
+    </section>
+  </div>
+  <footer class="statusbar"><div><span id="connectionDot" class="status-dot"></span><span id="statusText">Connexion au projet local…</span></div><div><span id="pendingStatus">Aucune modification</span><span class="status-divider"></span><span>Xbox · Z ↑</span><span class="status-divider"></span><span id="sourceSize">—</span></div></footer>
+  <div id="toast" class="toast" role="status"></div>
+  <dialog id="infoDialog"><div class="dialog-heading"><div><span class="eyebrow" id="dialogEyebrow">AZURIK LEVEL STUDIO</span><h2 id="dialogTitle">Commandes</h2></div><button id="dialogClose" class="icon-button" aria-label="Fermer"><svg><use href="#i-close"/></svg></button></div><div id="dialogBody"></div></dialog>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
